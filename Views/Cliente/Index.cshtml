@@ -1,0 +1,41 @@
+﻿@using MiPrimeraAplicacionWeb.Models
+@model List<ClienteCLS>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@Html.ActionLink("Agregar", "Agregar", "Cliente", null, new { @class="btn btn-primary"})
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <!--Llenar las cabeceras de la tabla-->
+            <td>@Html.LabelFor(b => Model[0].iidcliente)</td>
+            <td>@Html.LabelFor(b => Model[0].nombre)</td>
+            <td>@Html.LabelFor(b => Model[0].apPaterno)</td>
+            <td>@Html.LabelFor(b => Model[0].apMaterno)</td>
+            <td>@Html.LabelFor(b => Model[0].email)</td>
+            <td>@Html.LabelFor(b => Model[0].direccion)</td>
+            <td>@Html.LabelFor(b => Model[0].iidsexo)</td>
+            <td>@Html.LabelFor(b => Model[0].telefonoFijo)</td>
+            <td>@Html.LabelFor(b => Model[0].telefonoCelular)</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) { 
+        <tr>
+            <!--Llenar cuerpo de la tabla-->
+            <td>@item.iidcliente</td>
+            <td>@item.nombre</td>
+            <td>@item.apPaterno</td>
+            <td>@item.apMaterno</td>
+            <td>@item.email</td>
+            <td>@item.direccion</td>
+            <td>@item.iidsexo</td>
+            <td>@item.telefonoFijo</td>
+            <td>@item.telefonoCelular</td>
+        </tr>
+        }
+    </tbody>
+</table>
+

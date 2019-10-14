@@ -1,0 +1,28 @@
+﻿@using MiPrimeraAplicacionWeb.Models
+@model MarcaCLS
+@{
+    ViewBag.Title = "Agregar";
+}
+
+<h2>Agregar</h2>
+<!--Nombre Accion, Nombre controlador, Metodo por el que se envia la informacion-->
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Agregar", "Marca", FormMethod.Post)) {//Metodo que inserta
+            <div>
+                @Html.LabelFor(p => p.nombre)
+                @Html.TextBoxFor(p => p.nombre, new { @class = "form-control" })
+                @Html.ValidationMessage("nombre", new { @class = "text-danger"})<!--Agrega mensaje de error, en caso de mala captura-->
+            </div>
+            <div>
+                @Html.LabelFor(p => p.descripcion)
+                @Html.TextBoxFor(p => p.descripcion, new { @class = "form-control" })
+                @Html.ValidationMessage("descripcion", new { @class= "text-danger"})
+            </div>
+            <br/>
+            <div>
+                <input type="submit" class="btn btn-primary" value="Guardar"/>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,31 @@
+﻿@using MiPrimeraAplicacionWeb.Models
+@model List<MarcaCLS>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<!--Actiuonlink(Nombre del boton, Nombre de la accion, Nombre del controlador)-->
+@Html.ActionLink("Agregar","Agregar", "Marca", null, new { @class = "btn btn-primary" })
+<table class="table table-bordered table-striped"><!--Crear tabla (con Boostrap)-->
+    <thead><!--Crear cabecera-->
+        <tr>
+            <!--Crear fila-->
+            <td width="10%">@Html.LabelFor(p=>Model[0].iidmarca)</td>
+            <td width="20%">@Html.LabelFor(p=>Model[0].nombre)</td>
+            <td width="70%">@Html.LabelFor(p=>Model[0].descripcion)</td>            
+        </tr>
+
+    </thead>
+    <tbody><!--Cuerpo de la tabla-->
+        
+        @foreach (var item in Model) { //Retorna cada objeto en la lista(Model)
+        <tr>
+            <!--Registros de la tabla-->
+            <td>@item.iidmarca</td>
+            <td>@item.nombre</td>
+            <td>@item.descripcion</td>
+        </tr>
+        }        
+    </tbody>
+</table>

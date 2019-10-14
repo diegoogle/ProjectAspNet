@@ -1,0 +1,29 @@
+﻿@using MiPrimeraAplicacionWeb.Models
+@model List<SucursalCLS>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@Html.ActionLink("Agregar", "Agregar", "Sucursal",null, new { @class="btn btn-primary"})
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <td>@Html.LabelFor(p => Model[0].iidsucursal)</td>
+            <td>@Html.LabelFor(p => Model[0].nombre)</td>
+            <td>@Html.LabelFor(p => Model[0].telefono)</td>
+            <td>@Html.LabelFor(p => Model[0].email)</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) { 
+        <tr>
+            <td>@item.iidsucursal</td>
+            <td>@item.nombre</td>
+            <td>@item.telefono</td>
+            <td>@item.email</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
