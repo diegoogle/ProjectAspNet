@@ -18,4 +18,19 @@ listResult.RemoveAll(r => listAux.Exists(w => w.reserva == r.reserva));
                         disponible = (s.loc_max - s.loc_qty_units)
                     }).ToList();
 
-//
+//Move through list and changes values in specified item
+  foreach (CleanReserve c in listResult) {
+                    for (int x = 0; x < listSlots.Count; x++) {
+                        if (c.sku.Equals(listSlots[x].sku)) {
+                            c.slot = listSlots[x].slot;
+                            c.max = listSlots[x].max;
+                            c.slotQty = listSlots[x].qty_units;
+                            c.disponible = (listSlots[x].max - listSlots[x].qty_units);
+                            if (c.disponible < c.qtyRsrv) {
+                                c.deleteThis = "SI";
+                            } else {
+                                c.deleteThis = "NO";
+                            }
+                        }
+                    }
+                }
