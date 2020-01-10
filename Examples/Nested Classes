@@ -1,0 +1,27 @@
+//This file contains Nested Classes Examples in C#.
+
+   public class CleanReserve {
+            public string reserva { get; set; }
+            public string desc { get; set; }
+            public string partNo { get; set; }
+            public string sku { get; set; }
+            public float qtyRsrv { get; set; }
+            public string slot { get; set; }
+            public float max { get; set; }
+            public float slotQty { get; set; }
+            public float disponible { get; set; }    
+            public string deleteThis { get; set; }
+            //Constructor
+            public CleanReserve () {
+            }
+        }       
+    public class Slots {
+            public string sku { get; set; }
+            public string slot { get; set; }
+            public float qty_units { get; set; }
+            public float max { get; set; }
+            public float disponible { get; set; }
+            //Constructor
+            public Slots () {
+            }
+        }
