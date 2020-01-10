@@ -1,0 +1,21 @@
+This file contains examples for LINQ use in C#
+
+//Delete from list where slot = NA:
+listResult.RemoveAll((x) => x.slot == "NA");
+
+//Delete from list where listResult.reserva Exists in listAux.reserva:
+listResult.RemoveAll(r => listAux.Exists(w => w.reserva == r.reserva));
+
+//Select where loc_type = SLOT and loc_qty_units < loc_max, save result in new List<Slot> type
+ listResult =
+                   (from s in listInventory
+                    where s.loc_type.Equals("SLOT") && (s.loc_qty_units < s.loc_max)
+                    select new Slots {
+                        sku = s.loc_part,
+                        slot = s.loc_code,
+                        qty_units = s.loc_qty_units,
+                        max = s.loc_max,
+                        disponible = (s.loc_max - s.loc_qty_units)
+                    }).ToList();
+
+//
