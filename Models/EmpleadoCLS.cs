@@ -30,7 +30,7 @@ namespace MiPrimeraAplicacionWeb.Models {
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]//Formato de la fecha        
         public DateTime fechaContrato { get; set; }
-
+        
         [Display(Name = "Tipo Usuario")]
         [Required]
         public int iidTipoUsuario { get; set; }
@@ -44,6 +44,10 @@ namespace MiPrimeraAplicacionWeb.Models {
         public int iidSexo { get; set; }
 
         public int bhabilitado { get; set; }
+        [Required]
+        [Range(0,100000, ErrorMessage ="Fuera de rango")]
+        [Display(Name ="Sueldo")]
+        public decimal sueldo { get; set; }
 
         //Propiedades adicionales
         [Display(Name ="Tipo Contrato")]
@@ -51,5 +55,6 @@ namespace MiPrimeraAplicacionWeb.Models {
 
         [Display(Name ="Tipo Usuario")]
         public string nombreTipoUsuario { get; set; }
+        public string mensajeError { get; set; }
     }
 }

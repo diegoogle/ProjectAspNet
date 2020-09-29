@@ -20,6 +20,8 @@ namespace MiPrimeraAplicacionWeb.Models {
         //[Display(Name = "")] //Si no se pone display no aparece.
         //[Display(Name ="Habilitado")] [Required] [StringLength(100)] Tambien se puede colocar asi
         public int bhabilitado { get; set; }
+        //Añadiendo una propiedad
+        public string mensajeError { get; set; }
 
     }
 }

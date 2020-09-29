@@ -6,7 +6,7 @@ using System.Web;
 
 namespace MiPrimeraAplicacionWeb.Models {
     public class ViajeCLS {
-        [Display(Name ="Id Viaje")]        
+        [Display(Name = "Id Viaje")]
         public int iidViaje { get; set; }
 
         [Display(Name = "Lugar Origen")]
@@ -19,6 +19,7 @@ namespace MiPrimeraAplicacionWeb.Models {
 
         [Required]
         [Display(Name = "Precio")]
+        [Range(0, 100000, ErrorMessage ="Precio incorrecto")]
         public double precio { get; set; }
 
         [Display(Name = "Fecha Viaje")]

@@ -25,5 +25,6 @@ namespace MiPrimeraAplicacionWeb.Models {
         [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd}", ApplyFormatInEditMode =true)]//Formato de la fecha        
         public DateTime fechaApertura  { get; set; }
         public int bhabilitado { get; set; }
+        public string mensajeError { get; set; }
     }
 }
