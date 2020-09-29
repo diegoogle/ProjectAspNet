@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Data.Objects.SqlClient;
 using MiPrimeraAplicacionWeb.Models;
 
 namespace MiPrimeraAplicacionWeb.Controllers
@@ -12,52 +10,95 @@ namespace MiPrimeraAplicacionWeb.Controllers
     {
         public List<ClienteCLS> listaCliente = null;
         // GET: Cliente
-        public ActionResult Index()
+        public ActionResult Index(ClienteCLS clienteCLS)
         {
+            llenarListaSexos();
+            ViewBag.lista = listaSexo;
             using (var bd = new BDPasajeEntities()) {
-                listaCliente = (from cliente in bd.Cliente
-                                where cliente.BHABILITADO == 1
-                                select new ClienteCLS {
-                                    iidcliente = cliente.IIDCLIENTE,
-                                    nombre = cliente.NOMBRE,
-                                    apPaterno = cliente.APPATERNO,
-                                    apMaterno = cliente.APMATERNO,
-                                    email = cliente.EMAIL,
-                                    direccion = cliente.DIRECCION,
-                                    iidsexo = (int)cliente.IIDSEXO,
-                                    telefonoFijo = cliente.TELEFONOFIJO,
-                                    telefonoCelular = cliente.TELEFONOCELULAR                                    
-                                }).ToList();
+                if (clienteCLS.iidsexo == 0) {
+                    listaCliente = (from cliente in bd.Cliente
+                                    where cliente.BHABILITADO == 1
+                                    select new ClienteCLS {
+                                        iidcliente = cliente.IIDCLIENTE,
+                                        nombre = cliente.NOMBRE,
+                                        apPaterno = cliente.APPATERNO,
+                                        apMaterno = cliente.APMATERNO,
+                                        email = cliente.EMAIL,
+                                        direccion = cliente.DIRECCION,
+                                        iidsexo = (int)cliente.IIDSEXO,
+                                        telefonoFijo = cliente.TELEFONOFIJO,
+                                        telefonoCelular = cliente.TELEFONOCELULAR
+                                    }).ToList();
+                } else {
+                    listaCliente = (from cliente in bd.Cliente
+                                    where cliente.BHABILITADO == 1
+                                    && cliente.IIDSEXO == clienteCLS.iidsexo
+                                    select new ClienteCLS {
+                                        iidcliente = cliente.IIDCLIENTE,
+                                        nombre = cliente.NOMBRE,
+                                        apPaterno = cliente.APPATERNO,
+                                        apMaterno = cliente.APMATERNO,
+                                        email = cliente.EMAIL,
+                                        direccion = cliente.DIRECCION,
+                                        iidsexo = (int)cliente.IIDSEXO,
+                                        telefonoFijo = cliente.TELEFONOFIJO,
+                                        telefonoCelular = cliente.TELEFONOCELULAR
+                                    }).ToList();
+                }                
             }
                 return View(listaCliente);
         }
-        List<SelectListItem> listaSexos;
+        List<SelectListItem> listaSexo;
         private void llenarListaSexos () {
             using (var bd = new BDPasajeEntities()) {
-                listaSexos = (from sexo in bd.Sexo
+                listaSexo = (from sexo in bd.Sexo
                               where sexo.BHABILITADO == 1
                               select new SelectListItem {
                                   Text = sexo.NOMBRE,                                  
-                                  Value = SqlFunctions.StringConvert((double)sexo.IIDSEXO)
+                                  Value = sexo.IIDSEXO.ToString()
                               }).ToList();
-                listaSexos.Insert(0, new SelectListItem { Text = "--Seleccione--", Value = "" });
+                listaSexo.Insert(0, new SelectListItem { Text = "--Seleccione--", Value = "" });
             }
         }
         public ActionResult Agregar () {
             llenarListaSexos();
-            ViewBag.lista = listaSexos;
+            ViewBag.lista = listaSexo;
             return View();
+        }       
+        public ActionResult Editar (int id) {
+            ClienteCLS oClienteCLS = new ClienteCLS();
+            using (var bd = new BDPasajeEntities()) {
+                llenarListaSexos();
+                ViewBag.lista = listaSexo;
+                Cliente oCliente = bd.Cliente.Where(p => p.IIDCLIENTE.Equals(id)).First();
+                oClienteCLS.iidcliente = oCliente.IIDCLIENTE;
+                oClienteCLS.nombre = oCliente.NOMBRE;
+                oClienteCLS.apPaterno = oCliente.APPATERNO;
+                oClienteCLS.apMaterno = oCliente.APMATERNO;
+                oClienteCLS.direccion = oCliente.DIRECCION;
+                oClienteCLS.email = oCliente.EMAIL;
+                oClienteCLS.iidsexo = (int)oCliente.IIDSEXO;
+                oClienteCLS.telefonoCelular = oCliente.TELEFONOCELULAR;
+                oClienteCLS.telefonoFijo = oCliente.TELEFONOFIJO;
+            }
+                return View(oClienteCLS);
         }
 
         [HttpPost]
-        public ActionResult Agregar(ClienteCLS oClienteCLS) {
-            if (!ModelState.IsValid) {
-                llenarListaSexos();
-                ViewBag.lista = listaSexos;//Se repite el llenado de combo box para que no caiga en error
-                return View(oClienteCLS);
-            } else { 
+        public ActionResult Editar (ClienteCLS oClienteCLS) {
+            int nRegistros = 0;
             using (var bd = new BDPasajeEntities()) {
-                Cliente oCliente = new Cliente();
+                nRegistros = bd.Cliente.Where(p => p.NOMBRE.Equals(oClienteCLS.nombre) && p.APMATERNO.Equals(oClienteCLS.apMaterno) &&
+                p.APPATERNO.Equals(oClienteCLS.apPaterno) && !p.IIDCLIENTE.Equals(oClienteCLS.iidcliente)).Count();
+            }
+                if (!ModelState.IsValid || nRegistros > 0) {
+                if (nRegistros > 0) oClienteCLS.mensajeError = "Ya existe un cliente similar";
+                llenarListaSexos();
+                return View(oClienteCLS);
+                }
+            int idCliente = oClienteCLS.iidcliente;
+            using (var bd = new BDPasajeEntities()) {
+                Cliente oCliente = bd.Cliente.Where(p => p.IIDCLIENTE == idCliente).First();
                 oCliente.NOMBRE = oClienteCLS.nombre;
                 oCliente.APPATERNO = oClienteCLS.apPaterno;
                 oCliente.APMATERNO = oClienteCLS.apMaterno;
@@ -66,12 +107,49 @@ namespace MiPrimeraAplicacionWeb.Controllers
                 oCliente.IIDSEXO = oClienteCLS.iidsexo;
                 oCliente.TELEFONOFIJO = oClienteCLS.telefonoFijo;
                 oCliente.TELEFONOCELULAR = oClienteCLS.telefonoCelular;
-                oCliente.BHABILITADO = 1;
-                bd.Cliente.Add(oCliente);
                 bd.SaveChanges();
             }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Agregar(ClienteCLS oClienteCLS) {
+            int numRegistros = 0;
+            using (var bd = new BDPasajeEntities()) {
+                numRegistros = bd.Cliente.Where(p => p.NOMBRE.Equals(oClienteCLS.nombre) && p.APPATERNO.Equals(oClienteCLS.apPaterno)
+                && p.APMATERNO.Equals(oClienteCLS.apMaterno)).Count();
+            }
+                if (!ModelState.IsValid || numRegistros > 0) {
+                if (numRegistros > 0) oClienteCLS.mensajeError = "Ya existe este cliente registrado";
+                    llenarListaSexos();
+                    ViewBag.lista = listaSexo;//Se repite el llenado de combo box para que no caiga en error
+                    return View(oClienteCLS);
+                } else {
+                    using (var bd = new BDPasajeEntities()) {
+                        Cliente oCliente = new Cliente();
+                        oCliente.NOMBRE = oClienteCLS.nombre;
+                        oCliente.APPATERNO = oClienteCLS.apPaterno;
+                        oCliente.APMATERNO = oClienteCLS.apMaterno;
+                        oCliente.EMAIL = oClienteCLS.email;
+                        oCliente.DIRECCION = oClienteCLS.direccion;
+                        oCliente.IIDSEXO = oClienteCLS.iidsexo;
+                        oCliente.TELEFONOFIJO = oClienteCLS.telefonoFijo;
+                        oCliente.TELEFONOCELULAR = oClienteCLS.telefonoCelular;
+                        oCliente.BHABILITADO = 1;
+                        bd.Cliente.Add(oCliente);
+                        bd.SaveChanges();
+                    }
+                    return RedirectToAction("Index");
+                }
+        }
+        public ActionResult Eliminar(int iidcliente) {
+            using (var bd = new BDPasajeEntities()) {
+                Cliente cliente = bd.Cliente.Where(p => p.IIDCLIENTE.Equals(iidcliente)).First();
+                cliente.BHABILITADO = 0;
+                bd.SaveChanges();
                 return RedirectToAction("Index");
             }
+            
         }
     }
 }
