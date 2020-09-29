@@ -1,16 +1,21 @@
 ﻿@using MiPrimeraAplicacionWeb.Models
 @model EmpleadoCLS
 @{
-    ViewBag.Title = "Agregar";
+    ViewBag.Title = "Editar";
     List<SelectListItem> listaSexo = (List<SelectListItem>)ViewBag.listaSexo;
     List<SelectListItem> listaTipoContrato = (List<SelectListItem>)ViewBag.listaTipoContrato;
     List<SelectListItem> listaTipoUsuario = (List<SelectListItem>)ViewBag.listaTipoUsuario;
 }
 
-<h2>Agregar</h2>
+<h2>Editar</h2>
 <div class="row">
     <div class="col-md-6">
-        @using (Html.BeginForm("Agregar", "Empleado", FormMethod.Post, new { @id ="frmAgregar" })) {
+        @using (Html.BeginForm("Editar", "Empleado", FormMethod.Post, new { @id = "frmEditar" })) {
+            <div>
+                @Html.LabelFor(p => p.iidEmpleado)
+                @Html.TextBoxFor(p => p.iidEmpleado, new { @class = "form-control", @readOnly=true })
+                @Html.ValidationMessage("iidEmpleado", new { @class = "text-danger" })
+            </div>
             <div>
                 @Html.LabelFor(p => p.nombre)
                 @Html.TextBoxFor(p => p.nombre, new { @class = "form-control" })
@@ -57,7 +62,7 @@
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Guardar
             </button>
-            @Html.ActionLink("Regresar", "Index", "Empleado", null, new { @class = "btn btn-danger"})
+            @Html.ActionLink("Regresar", "Index", "Empleado", new { @class = "btn btn-danger" })
         }
     </div>
 </div>
@@ -80,7 +85,7 @@
 </div>
 <script>
     function Agregar() {
-        var frmAgregar = document.getElementById("frmAgregar");
-        frmAgregar.submit();
+        var frmEditar = document.getElementById("frmEditar");
+        frmEditar.submit();
     }
 </script>

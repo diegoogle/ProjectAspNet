@@ -2,10 +2,16 @@
 @model List<EmpleadoCLS>
 @{
     ViewBag.Title = "Index";
+    List<SelectListItem> listaUsuario = (List<SelectListItem>)ViewBag.listaTipoUsuario;
 }
 
 <h2>Index</h2>
 @Html.ActionLink("Agregar", "Agregar", "Empleado", null, new { @class = "btn btn-primary" })
+
+
+@using (Html.BeginForm("Index", "Empleado", FormMethod.Get, new { @id="frmBusqueda"})) {
+@Html.Label("Ingresa el tipo de usuario")
+@Html.DropDownList("iidTipoUsuario", listaUsuario)
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
@@ -14,6 +20,7 @@
             <td>@Html.LabelFor(p => Model[0].apPaterno)</td>
             <td>@Html.LabelFor(p => Model[0].nombreTipoUsuario)</td>
             <td>@Html.LabelFor(p => Model[0].nombreTipoContrato)</td>
+            <td>Operaciones</td>
         </tr>
     </thead>
     <tbody>
@@ -24,8 +31,47 @@
                 <td>@item.apPaterno</td>
                 <td>@item.nombreTipoUsuario</td>
                 <td>@item.nombreTipoContrato</td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", "Empleado", new { id = item.iidEmpleado }, new { @class = "glyphicon glyphicon-edit btn btn-primary" })
+                    <button type="button" onclick="mostrarPopup(@item.iidEmpleado)" class="glyphicon glyphicon-trash btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                    </button>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-
+}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Guardar los cambios?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-info" onclick="Agregar()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("Eliminar", "Empleado", FormMethod.Post, new { @id = "frmIndex" })) {
+    @Html.Hidden("IdEmpleado");
+}
+<script>
+    function mostrarPopup(idempleado) {
+        document.getElementById("IdEmpleado").value = idempleado;
+    }
+    function Agregar() {
+        var frmIndex = document.getElementById("frmIndex");
+        frmIndex.submit();
+    }
+    var idTipoUsuario = document.getElementById("iidTipoUsuario");
+    iidTipoUsuario.onchange = function () {
+        var frmBusqueda = document.getElementById("frmBusqueda");
+        frmBusqueda.submit();
+    }
+</script>

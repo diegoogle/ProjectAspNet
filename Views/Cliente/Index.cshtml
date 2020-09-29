@@ -2,10 +2,17 @@
 @model List<ClienteCLS>
 @{
     ViewBag.Title = "Index";
+    List<SelectListItem> listaSexo = (List<SelectListItem>)ViewBag.lista;
 }
 
+
 <h2>Index</h2>
-@Html.ActionLink("Agregar", "Agregar", "Cliente", null, new { @class="btn btn-primary"})
+@Html.ActionLink("Agregar", "Agregar", "Cliente", null, new { @class = "btn btn-primary" })
+
+@using (Html.BeginForm("Index", "Cliente", FormMethod.Get)) {
+@Html.Label("Ingrese sexo del cliente ")
+@Html.DropDownList("iidsexo", listaSexo)
+<input type="submit" value="Buscar" class="btn btn-success"/>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -19,23 +26,59 @@
             <td>@Html.LabelFor(b => Model[0].iidsexo)</td>
             <td>@Html.LabelFor(b => Model[0].telefonoFijo)</td>
             <td>@Html.LabelFor(b => Model[0].telefonoCelular)</td>
+            <td>Operaciones</td>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) { 
-        <tr>
-            <!--Llenar cuerpo de la tabla-->
-            <td>@item.iidcliente</td>
-            <td>@item.nombre</td>
-            <td>@item.apPaterno</td>
-            <td>@item.apMaterno</td>
-            <td>@item.email</td>
-            <td>@item.direccion</td>
-            <td>@item.iidsexo</td>
-            <td>@item.telefonoFijo</td>
-            <td>@item.telefonoCelular</td>
-        </tr>
+        @foreach (var item in Model) {
+            <tr>
+                <!--Llenar cuerpo de la tabla-->
+                <td>@item.iidcliente</td>
+                <td>@item.nombre</td>
+                <td>@item.apPaterno</td>
+                <td>@item.apMaterno</td>
+                <td>@item.email</td>
+                <td>@item.direccion</td>
+                <td>@item.iidsexo</td>
+                <td>@item.telefonoFijo</td>
+                <td>@item.telefonoCelular</td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", "Cliente", new { id = item.iidcliente }, new { @class = "glyphicon glyphicon-edit btn btn-primary" })
+                    @*@Html.ActionLink(" ", "Eliminar", "Cliente", new { id = item.iidcliente }, new { @class = "glyphicon glyphicon-trash btn btn-danger" })*@
+                    <button type="button" onclick="mostrarPopup(@item.iidcliente)" class="glyphicon glyphicon-trash btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                    </button>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
-
+}
+@using (Html.BeginForm("Eliminar", "Cliente", FormMethod.Post, new { @id = "frmEliminar" })) {
+    @Html.Hidden("iidcliente");@*No muestra el texbox*@
+}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Guardar los cambios?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-info" onclick="Eliminar()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function mostrarPopup(iidcliente) {
+        document.getElementById("iidcliente").value = iidcliente;
+    }
+    function Eliminar() {
+        var frmEliminar = document.getElementById("frmEliminar");
+        frmEliminar.submit();
+    }
+</script>

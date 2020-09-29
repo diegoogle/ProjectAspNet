@@ -4,15 +4,18 @@
     ViewBag.Title = "Agregar";
 }
 
-<h2>Agregar</h2>
+<h2>Agregar Marca</h2>
 <!--Nombre Accion, Nombre controlador, Metodo por el que se envia la informacion-->
 <div class="row">
     <div class="col-md-6">
-        @using (Html.BeginForm("Agregar", "Marca", FormMethod.Post)) {//Metodo que inserta
+        @using (Html.BeginForm("Agregar", "Marca", FormMethod.Post, new { @id="frmAgregar"})) {//Metodo que inserta
             <div>
                 @Html.LabelFor(p => p.nombre)
                 @Html.TextBoxFor(p => p.nombre, new { @class = "form-control" })
                 @Html.ValidationMessage("nombre", new { @class = "text-danger"})<!--Agrega mensaje de error, en caso de mala captura-->
+                @if (Model!=null && Model.mensajeError != null) { 
+                    @Html.Label(Model.mensajeError, new { @class="text-danger"})
+                } 
             </div>
             <div>
                 @Html.LabelFor(p => p.descripcion)
@@ -22,7 +25,17 @@
             <br/>
             <div>
                 <input type="submit" class="btn btn-primary" value="Guardar"/>
+                @Html.ActionLink("Regresar","Index","Marca", null, new { @class="btn btn-danger"})
             </div>
         }
     </div>
 </div>
+<script>
+    var frmAgregar = document.getElementById("frmAgregar");
+    frmAgregar.onsubmit = function (e) {
+        e.preventDefault();
+        if (confirm("Agregar Registro?") == 1) {
+            frmAgregar.submit();
+        }
+    }
+</script>
